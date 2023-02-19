@@ -27,8 +27,18 @@ import SideBarCard from "../compounents/SideBarCard"
     export const ProviderContext = createContext({} as actionsTypes);
 
     const ContextProvider = ({children}:childrenType) => {
+        
+        const getStorage = () => {
 
-        const [card, setCard] = useState<cardType[]>([]);
+            if(localStorage.getItem("card")) {
+
+                return JSON.parse(localStorage.getItem("card") || "")
+            }else {
+                return []
+            }
+        }
+
+        const [card, setCard] = useState<cardType[]>(getStorage() || []);
         const [open, setOpen] = useState(false);
 
         const openCard = () => setOpen(true)
@@ -91,6 +101,10 @@ import SideBarCard from "../compounents/SideBarCard"
             return currencyItem.filter((item) => item.id !== id)
         })
     }
+    
+    useEffect(() => {
+        localStorage.setItem("card", JSON.stringify(card) || "")
+    }, [card])
 
     return (
 
